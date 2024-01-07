@@ -17,7 +17,7 @@ public class ExpenseTrackerApp {
 			System.out.println("\nExpense Tracker Menu:");
             System.out.println("1. Add Categories");
             System.out.println("2. Add Transactions");
-            System.out.println("3. Edit/Delete Transactions");
+            System.out.println("3. Delete Transactions");
             System.out.println("4. View Recent Transactions");
             System.out.println("5. Set Budgets");
             System.out.println("6. Track Spending against Budgets");
@@ -38,7 +38,7 @@ public class ExpenseTrackerApp {
 					break;
 					
 				case 3:
-					editOrDeleteTransactions();
+					deleteTransaction();
 					break;
 					
 				case 4:
@@ -112,8 +112,40 @@ public class ExpenseTrackerApp {
 		System.out.println("Category: " + categoryName + " added.");
 	}
 	
-	private static void editOrDeleteTransactions() {
+	//delete transaction
+	private static void deleteTransaction() {
+		System.out.print("Enter the number of recent transactions that you want to view, from that list you can select which transaction to delete: ");
+		int count = scanner.nextInt();
+		scanner.nextLine();
 		
+		List<Transaction> recentTransactions = dataHandler.getRecentTransactions(count);
+		
+		if(recentTransactions.isEmpty()){
+			System.out.println("No transactions avaiable.");
+			return;
+		} else {
+			System.out.println("Transactions available:");
+			
+			for(int i=0; i< recentTransactions.size(); i++){
+				System.out.println((i+1) + ". " + recentTransactions.get(i).toString());
+			}
+			
+			System.out.print("Select the index of the transaction that you want to delete:");
+			int index = scanner.nextInt();
+			scanner.nextLine();
+			
+			if(index>0 && index<=recentTransactions.size()) {
+				boolean isDeleted = dataHandler.deleteTransaction(index-1);
+				
+				if(isDeleted) {
+					System.out.println("Transaction deleted successfully.");
+				} else {
+					System.out.println("Failed to deleted the transaction. Please try again!");
+				}
+			} else {
+				System.out.println("Invalid transaction number.");
+			}
+		}
 	}
 	
 	private static void recentTransactions() {

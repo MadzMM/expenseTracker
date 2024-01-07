@@ -65,7 +65,13 @@ public class DataHandler {
 		return categoryBudgets;
 	}
 	
-	
-	
+	//delete transaction
+	public boolean deleteTransaction(int index){
+		if(index>=0 && index<transactions.size()){
+			transactions.remove(index);
+			return true;
+		}
+		return false;
+	}
 	
 }
