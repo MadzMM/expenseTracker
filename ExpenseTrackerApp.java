@@ -94,6 +94,15 @@ public class ExpenseTrackerApp {
 	
 	
 	private static void addCategories(){
+		
+		//display existing categories
+		System.out.println("Existing Categories:");
+		List<Category> categories = dataHandler.getCategories();
+		for(Category category : categories) {
+			System.out.println(category.getCategoryName());
+		}
+		
+		//add new category
 		System.out.println("Adding a new category: ");
 		System.out.print("Enter the category name: ");
 		String categoryName = scanner.nextLine().trim();
