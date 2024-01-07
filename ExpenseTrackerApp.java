@@ -1,11 +1,11 @@
 import java.util.List;
 import java.util.Scanner;
+import java.util.Map;
 
 public class ExpenseTrackerApp {
 	
 	private static final Scanner scanner = new Scanner(System.in);
 	private static final DataHandler dataHandler = new DataHandler();
-	
 		
 	public static void main(String[] args) {
 		showMenu();
@@ -21,6 +21,7 @@ public class ExpenseTrackerApp {
             System.out.println("4. View Recent Transactions");
             System.out.println("5. Set Budgets");
             System.out.println("6. Track Spending against Budgets");
+			System.out.println("7. View Budgets");
             System.out.println("0. Exit");
 			
 			System.out.print("Enter your choice: ");
@@ -50,6 +51,10 @@ public class ExpenseTrackerApp {
 					
 				case 6:
 					spendingAgainstBudgets();
+					break;
+					
+				case 7:
+					viewBudgets();
 					break;
 					
 				case 0:
@@ -123,42 +128,63 @@ public class ExpenseTrackerApp {
 	}
 	
 	private static void setBudget() {
+		System.out.println("Set Budget for Categories:");
 		
+		List<Category> categories = dataHandler.getCategories();
+
+		if (categories.isEmpty()) {
+			System.out.println("No categories available. Add categories first.");
+			return;
+		}
+		 System.out.println("Categories:");
+		for (int i = 0; i < categories.size(); i++) {
+			System.out.println((i + 1) + ". " + categories.get(i).getCategoryName());
+		}
+		
+		//Prompt user to select a category
+		System.out.print("Enter the category name to set the budget: ");
+		String categoryName = scanner.nextLine().trim();
+		
+		boolean categoryFound = false;
+		for(Category category : categories){
+			if(category.getCategoryName().equalsIgnoreCase(categoryName)){
+				System.out.print("Enter the budget for " + categoryName + ": " );
+				double budgetAmount = scanner.nextDouble();
+				scanner.nextLine();
+				
+				dataHandler.setBudgetForCategory(category, budgetAmount);
+				categoryFound = true;
+				
+				System.out.println("Budget set successfully for " + category.getCategoryName());
+				
+				break;
+			}
+		}
+		if (!categoryFound) {
+			System.out.println("Category not found.");
+		}
 	}
 	
 	private static void spendingAgainstBudgets(){
 		
-	}
+	}	
 	
-	
+	//view budgets
+	private static void viewBudgets(){
+		System.out.println("Category-wise Budgets:");
 		
-	/*	
+		Map<String, Double> categoryBudgets = dataHandler.getCategoryBudgets();
 		
-		
-		
-		//adding sample categories
-		Category category1 = new Category("Food");
-		Category category2 = new Category("Transportation");
-		
-		dataHandler.addCategory(category1);
-		dataHandler.addCategory(category2);
-		
-		//adding sample transactions
-		Transaction transaction1 = new Transaction(50.0, "Expense", "Food", "Lunch", false);
-		Transaction transaction2 = new Transaction(100.0, "Income", "Salary", "Bonus", false);
-		
-		dataHandler.addTransaction(transaction1);
-		dataHandler.addTransaction(transaction2);
-		
-		// Retrieve recent transactions based on user input
-        List<Transaction> recentTransactions = dataHandler.getRecentTransactions(count);
-		
-		for(Transaction transaction : recentTransactions) {
-			System.out.println("Amount: " + transaction.getAmount() + ", Category: " + transaction.getCategory() + ", Type: " + transaction.getType() + ", Note: " + transaction.getNote());
+		if(categoryBudgets.isEmpty()){
+			System.out.println("No budgets available. Set Budget first.");
+		} else {
+			for (Map.Entry<String, Double> entry: categoryBudgets.entrySet()) {
+				String categoryName = entry.getKey();
+				double budgetAmount = entry.getValue();
+				System.out.println(categoryName + ": " + budgetAmount);
+			}
 		}
-		scanner.close(); //close the scanner when done
+		
 	}
-	
-	*/
 }
 
