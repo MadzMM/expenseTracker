@@ -234,7 +234,7 @@ public class ExpenseTrackerApp {
 	
 	//view category sum
 	private static void viewCategorySums(){
-		System.out.println("Category-wise Transaction Sums:");
+		System.out.println("Category-wise Transaction Sums and Budgets:");
 		
 		Map<String, Double> categorySums = dataHandler.calculateCategorySums();
 		
@@ -244,7 +244,23 @@ public class ExpenseTrackerApp {
 			for (Map.Entry<String, Double> entry: categorySums.entrySet()) {
 				String categoryName = entry.getKey();
 				double sum = entry.getValue();
-				System.out.println(categoryName + ": " + sum);
+				
+				double budget = dataHandler.getBudgetForCategory(categoryName);
+				
+				System.out.println(categoryName + " - Total Transactions: " + sum);
+				
+				if (budget != 0.0) {
+					double balance = budget - sum;
+					double percentage = (sum / budget) * 100;
+					
+					System.out.println("Budget for " + categoryName + ": " + budget);
+					System.out.println("Balance: " + balance);
+					System.out.println("Percentage of Balance: " + percentage + "%");
+				} else {
+					System.out.println("Budget not set for " + categoryName);
+				}
+				
+				System.out.println();
 			}
 		}
 	}

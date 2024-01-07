@@ -1,7 +1,8 @@
 import java.util.ArrayList;
 import java.util.List;
-import java.util.HashMap;
+import java.util.TreeMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class DataHandler {
 	
@@ -14,7 +15,7 @@ public class DataHandler {
 	public DataHandler() {
 		transactions = new ArrayList<>();
 		categories = new ArrayList<>();
-		categoryBudgets = new HashMap<>();
+		categoryBudgets = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 		
 		//initialize categories with preset values
 		Category foodCategory = new Category("Food");
@@ -55,8 +56,13 @@ public class DataHandler {
 	public void setBudgetForCategory(Category category, double budgetAmount) {
 		
 		// Store category name and budget in the Map
-		categoryBudgets.put(category.getCategoryName(), budgetAmount);
+		categoryBudgets.put(category.getCategoryName().toLowerCase(), budgetAmount);
 	}
+	
+	//get budget from categories
+	public double getBudgetForCategory(String categoryName) {
+       return categoryBudgets.getOrDefault(categoryName.toLowerCase(), 0.0);
+    }
 	
 	
 	//view budgets
@@ -75,16 +81,10 @@ public class DataHandler {
 	
 	//calculate sum of each category
 	public Map<String, Double> calculateCategorySums() {
-		Map<String, Double> categorySums = new HashMap<>();
-		
-		for (Transaction transaction : transactions) {
-			String category = transaction.getCategory();
-			double amount = transaction.getAmount();
-			
-			categorySums.put(category, categorySums.getOrDefault(category, 0.0) + amount);
-		}
-		
-		return categorySums;
+		Map<String, Double> categorySums = transactions.stream()
+                .collect(Collectors.groupingBy(Transaction::getCategory,
+                        Collectors.summingDouble(Transaction::getAmount)));
+        return categorySums;
 	}
 	
 }
