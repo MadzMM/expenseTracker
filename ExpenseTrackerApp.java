@@ -50,7 +50,7 @@ public class ExpenseTrackerApp {
 					break;
 					
 				case 6:
-					spendingAgainstBudgets();
+					viewCategorySums();
 					break;
 					
 				case 7:
@@ -67,6 +67,7 @@ public class ExpenseTrackerApp {
 		} while(choice !=0);
 	}	
 	
+	//add new transaction
 	private static void addTransactions() {
 		System.out.println("Adding a new transaction:");
 		
@@ -93,6 +94,7 @@ public class ExpenseTrackerApp {
 	}
 	
 	
+	//add categories
 	private static void addCategories(){
 		
 		//display existing categories
@@ -148,6 +150,7 @@ public class ExpenseTrackerApp {
 		}
 	}
 	
+	//view recent transactions
 	private static void recentTransactions() {
 		//taking the user input count to retrive the recent transactions
 		System.out.print("Enter the number of recent transactions to view: ");
@@ -168,6 +171,7 @@ public class ExpenseTrackerApp {
 		}
 	}
 	
+	//Set budget for a category
 	private static void setBudget() {
 		System.out.println("Set Budget for Categories:");
 		
@@ -226,6 +230,23 @@ public class ExpenseTrackerApp {
 			}
 		}
 		
+	}
+	
+	//view category sum
+	private static void viewCategorySums(){
+		System.out.println("Category-wise Transaction Sums:");
+		
+		Map<String, Double> categorySums = dataHandler.calculateCategorySums();
+		
+		if(categorySums.isEmpty()){
+			System.out.println("No transactions available.");
+		} else {
+			for (Map.Entry<String, Double> entry: categorySums.entrySet()) {
+				String categoryName = entry.getKey();
+				double sum = entry.getValue();
+				System.out.println(categoryName + ": " + sum);
+			}
+		}
 	}
 }
 

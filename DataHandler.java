@@ -11,7 +11,6 @@ public class DataHandler {
 	// Map to store category budgets
 	private Map<String, Double> categoryBudgets;
 	
-	
 	public DataHandler() {
 		transactions = new ArrayList<>();
 		categories = new ArrayList<>();
@@ -72,6 +71,20 @@ public class DataHandler {
 			return true;
 		}
 		return false;
+	}
+	
+	//calculate sum of each category
+	public Map<String, Double> calculateCategorySums() {
+		Map<String, Double> categorySums = new HashMap<>();
+		
+		for (Transaction transaction : transactions) {
+			String category = transaction.getCategory();
+			double amount = transaction.getAmount();
+			
+			categorySums.put(category, categorySums.getOrDefault(category, 0.0) + amount);
+		}
+		
+		return categorySums;
 	}
 	
 }
